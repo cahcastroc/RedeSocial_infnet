@@ -17,5 +17,8 @@ namespace RedeSocial_infnet.Service.Data
         }
 
         public DbSet<Usuario> Usuarios { get;set; }
+
+        public DbSet<Post> Posts { get; set; }
+      
     }
 }

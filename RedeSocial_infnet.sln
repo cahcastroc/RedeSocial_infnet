@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedeSocial_infnet.API", "RedeSocial_infnet.API\RedeSocial_infnet.API.csproj", "{3E9F1CFE-A486-4CCE-8751-82692A0F2A6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedeSocial_infnet.API", "RedeSocial_infnet.API\RedeSocial_infnet.API.csproj", "{3E9F1CFE-A486-4CCE-8751-82692A0F2A6D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{499F9D3F-2679-435A-87FD-68D2D1B6CCF3} = {499F9D3F-2679-435A-87FD-68D2D1B6CCF3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedeSocial_infnet.Domain", "RedeSocial_infnet.Domain\RedeSocial_infnet.Domain.csproj", "{499F9D3F-2679-435A-87FD-68D2D1B6CCF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedeSocial_infnet.Domain", "RedeSocial_infnet.Domain\RedeSocial_infnet.Domain.csproj", "{499F9D3F-2679-435A-87FD-68D2D1B6CCF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedeSocial_infnet.Service", "RedeSocial_infnet.Service\RedeSocial_infnet.Service.csproj", "{ECD4A103-CE7C-4455-B886-4A4E9D213B1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedeSocial_infnet.Service", "RedeSocial_infnet.Service\RedeSocial_infnet.Service.csproj", "{ECD4A103-CE7C-4455-B886-4A4E9D213B1E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{499F9D3F-2679-435A-87FD-68D2D1B6CCF3} = {499F9D3F-2679-435A-87FD-68D2D1B6CCF3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedeSocial_infnet.MVC", "RedeSocial_infnet.MVC\RedeSocial_infnet.MVC.csproj", "{9CA75792-E6FB-4BE8-8195-0F36645E2487}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedeSocial_infnet.MVC", "RedeSocial_infnet.MVC\RedeSocial_infnet.MVC.csproj", "{9CA75792-E6FB-4BE8-8195-0F36645E2487}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
