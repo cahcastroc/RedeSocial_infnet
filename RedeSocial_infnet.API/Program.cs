@@ -21,10 +21,12 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddIdentity<Usuario, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDbContext>();
 
+
+
 //JWT
-var jwtSection = builder.Configuration.GetSection("JWTconfig"); //aqui 
+var jwtSection = builder.Configuration.GetSection("JwtConfig"); 
 builder.Services.Configure<JwtConfig>(jwtSection);
-var jwtBearerTokenSettings = jwtSection.Get<JwtConfig>(); //aqui 
+var jwtBearerTokenSettings = jwtSection.Get<JwtConfig>();  
 var key = Encoding.ASCII.GetBytes(jwtBearerTokenSettings.SecretKey);
 builder.Services.AddAuthentication(options =>
 {
@@ -47,6 +49,8 @@ builder.Services.AddAuthentication(options =>
             ClockSkew = TimeSpan.Zero
         };
     });
+
+
 
 var app = builder.Build();
 

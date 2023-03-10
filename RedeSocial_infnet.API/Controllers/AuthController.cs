@@ -94,6 +94,10 @@ namespace RedeSocial_infnet.API.Controllers
                 return new BadRequestObjectResult(new { Message = "Falha ao editar o usuário." });
             }
 
+            if(userName != User.Identity.Name)
+            {
+                return new BadRequestObjectResult(new { Message = "Você não tem permissão para editar este usuário." });
+            }
 
             Usuario usuarioAtual = await userManager.FindByNameAsync(userName);
 
@@ -142,6 +146,7 @@ namespace RedeSocial_infnet.API.Controllers
                 {
                     new Claim(ClaimTypes.Name, usuario.UserName.ToString()),
                     new Claim(ClaimTypes.Email, usuario.Email)
+                   
                 }),
 
                 Expires = DateTime.UtcNow.AddSeconds(jwtBearerTokenConfig.ExpiryTimeInSeconds),
