@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RedeSocial_infnet.Domain.Models;
 using RedeSocial_infnet.Service.Jwt;
+using RedeSocial_infnet.Service.ViewModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -18,26 +19,38 @@ namespace RedeSocial_infnet.API.Controllers
     {
 
         private readonly JwtConfig jwtBearerTokenConfig;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<Usuario> userManager;
+        private readonly SignInManager<Usuario> signInManager;
 
-        public AuthController(IOptions<JwtConfig> jwtTokenOptions, UserManager<IdentityUser> userManager)
+        public AuthController(IOptions<JwtConfig> jwtTokenOptions, UserManager<Usuario> userManager, SignInManager<Usuario> signInManager)
         {
             this.jwtBearerTokenConfig = jwtTokenOptions.Value;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
 
         [HttpPost]
         [Route("Registro")]
-        public async Task<IActionResult> Registro([FromBody] Usuario usuario)
+        public async Task<IActionResult> Registro([FromBody] UsuarioViewModel user)
         {
-            if (!ModelState.IsValid || usuario == null)
+            if (!ModelState.IsValid || user == null)
             {
                 return new BadRequestObjectResult(new { Message = "Falha ao registrar o usuário." });
             }
 
+            Usuario usuario = new Usuario
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Password = user.Password,
+                Localidade = user.Localidade,
+                AreaMigracao = user.AreaMigracao
+            };
+
             IdentityUser identityUser = new IdentityUser() { UserName = usuario.UserName, Email = usuario.Email };
-            IdentityResult identityResult = await userManager.CreateAsync(identityUser, usuario.Password);
+
+           var identityResult = await userManager.CreateAsync(usuario, usuario.Password);
             if (!identityResult.Succeeded)
             {
                 ModelStateDictionary dictionary = new ModelStateDictionary();               
@@ -69,9 +82,9 @@ namespace RedeSocial_infnet.API.Controllers
             return Ok(new { Token = token, Message = "Login efetuado com Sucesso" });
         }
 
-        private async Task<IdentityUser> ValidateUser(Login credenciais)
+        private async Task<Usuario> ValidateUser(Login credenciais)
         {
-            IdentityUser identityUser = await userManager.FindByNameAsync(credenciais.UserName);
+           var identityUser = await userManager.FindByNameAsync(credenciais.UserName);
             if (identityUser != null)
             {
                 PasswordVerificationResult result = userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, credenciais.Password);
