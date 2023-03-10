@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RedeSocial_infnet.Service.Migrations
 {
-    public partial class Init : Migration
+    public partial class Datetime : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,11 @@ namespace RedeSocial_infnet.Service.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Localidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AreaMigracao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EditadoEm = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

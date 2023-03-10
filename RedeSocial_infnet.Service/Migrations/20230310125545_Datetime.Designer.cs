@@ -12,8 +12,8 @@ using RedeSocial_infnet.Service.Data;
 namespace RedeSocial_infnet.Service.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230309235915_4")]
-    partial class _4
+    [Migration("20230310125545_Datetime")]
+    partial class Datetime
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -173,8 +173,13 @@ namespace RedeSocial_infnet.Service.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CriadoEm")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EditadoEm")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -219,7 +224,6 @@ namespace RedeSocial_infnet.Service.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 

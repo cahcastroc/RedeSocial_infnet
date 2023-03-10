@@ -45,7 +45,8 @@ namespace RedeSocial_infnet.API.Controllers
                 Email = user.Email,
                 Password = user.Password,
                 Localidade = user.Localidade,
-                AreaMigracao = user.AreaMigracao
+                AreaMigracao = user.AreaMigracao,
+                CriadoEm = DateTime.Now
             };
 
             IdentityUser identityUser = new IdentityUser() { UserName = usuario.UserName, Email = usuario.Email };
@@ -82,6 +83,41 @@ namespace RedeSocial_infnet.API.Controllers
             return Ok(new { Token = token, Message = "Login efetuado com Sucesso" });
         }
 
+        [HttpPut]
+        [Route("Editar")]
+        public async Task<IActionResult> Editar(string userName, [FromBody] UsuarioViewModel usuarioAtualizado)
+        {
+            if (usuarioAtualizado == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Falha ao editar o usuário." });
+            }
+
+
+            Usuario usuarioAtual = await userManager.FindByNameAsync(usuarioAtualizado.UserName);
+
+            if (usuarioAtual == null)
+            {
+                return NotFound();
+            }
+
+            usuarioAtual.UserName = usuarioAtualizado.UserName;
+            usuarioAtual.Email = usuarioAtualizado.Email;
+            usuarioAtual.Password = usuarioAtualizado.Password;
+            usuarioAtual.Localidade = usuarioAtualizado.Localidade;
+            usuarioAtual.AreaMigracao = usuarioAtualizado.AreaMigracao;
+            usuarioAtual.EditadoEm = DateTime.Now;
+
+            IdentityResult resultado = await userManager.UpdateAsync(usuarioAtual);
+
+            if (resultado.Succeeded)
+            {
+                return Ok(new { Message = "Usuário editado com sucesso" });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Falha ao editar o usuário." });
+            }
+        }
         private async Task<Usuario> ValidateUser(Login credenciais)
         {
            var identityUser = await userManager.FindByNameAsync(credenciais.UserName);

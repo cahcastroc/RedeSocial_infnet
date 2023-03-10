@@ -16,6 +16,8 @@ namespace RedeSocial_infnet.Domain.Models
 
         public string Localidade { get; set; }
         public string AreaMigracao { get; set; }
+        public DateTime CriadoEm { get; set; }
+        public DateTime EditadoEm { get; set; }
 
 
     }
