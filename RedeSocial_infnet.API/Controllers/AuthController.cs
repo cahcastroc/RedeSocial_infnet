@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -70,22 +71,23 @@ namespace RedeSocial_infnet.API.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] Login credenciais)
         {
-            IdentityUser identityUser;
+            Usuario usuario;
 
             if (!ModelState.IsValid
                 || credenciais == null
-                || (identityUser = await ValidateUser(credenciais)) == null)
+                || (usuario = await ValidateUser(credenciais)) == null)
             {
                 return new BadRequestObjectResult(new { Message = "Falha no Login" });
             }
 
-            var token = GenerateToken(identityUser);
+            var token = GenerateToken(usuario);
             return Ok(new { Token = token, Message = "Login efetuado com Sucesso" });
         }
 
         [HttpPut]
+        [Authorize]
         [Route("Editar")]
-        public async Task<IActionResult> Editar(string userName, [FromBody] UsuarioViewModel usuarioAtualizado)
+        public async Task<IActionResult> Editar(string userName, [FromBody] EdicaoUsuarioViewModel usuarioAtualizado)
         {
             if (usuarioAtualizado == null)
             {
@@ -93,16 +95,14 @@ namespace RedeSocial_infnet.API.Controllers
             }
 
 
-            Usuario usuarioAtual = await userManager.FindByNameAsync(usuarioAtualizado.UserName);
+            Usuario usuarioAtual = await userManager.FindByNameAsync(userName);
 
             if (usuarioAtual == null)
             {
                 return NotFound();
             }
 
-            usuarioAtual.UserName = usuarioAtualizado.UserName;
-            usuarioAtual.Email = usuarioAtualizado.Email;
-            usuarioAtual.Password = usuarioAtualizado.Password;
+            usuarioAtual.Email = usuarioAtualizado.Email;      
             usuarioAtual.Localidade = usuarioAtualizado.Localidade;
             usuarioAtual.AreaMigracao = usuarioAtualizado.AreaMigracao;
             usuarioAtual.EditadoEm = DateTime.Now;
@@ -120,17 +120,18 @@ namespace RedeSocial_infnet.API.Controllers
         }
         private async Task<Usuario> ValidateUser(Login credenciais)
         {
-           var identityUser = await userManager.FindByNameAsync(credenciais.UserName);
+           Usuario identityUser = await userManager.FindByNameAsync(credenciais.UserName);
             if (identityUser != null)
             {
                 PasswordVerificationResult result = userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, credenciais.Password);
+                Console.WriteLine("deu ruim " + result);
                 return result == PasswordVerificationResult.Failed ? null : identityUser;
             }
 
             return null;
         }
 
-        private object GenerateToken(IdentityUser identityUser)
+        private object GenerateToken(Usuario usuario)
         {
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(jwtBearerTokenConfig.SecretKey);
@@ -139,8 +140,8 @@ namespace RedeSocial_infnet.API.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, identityUser.UserName.ToString()),
-                    new Claim(ClaimTypes.Email, identityUser.Email)
+                    new Claim(ClaimTypes.Name, usuario.UserName.ToString()),
+                    new Claim(ClaimTypes.Email, usuario.Email)
                 }),
 
                 Expires = DateTime.UtcNow.AddSeconds(jwtBearerTokenConfig.ExpiryTimeInSeconds),
