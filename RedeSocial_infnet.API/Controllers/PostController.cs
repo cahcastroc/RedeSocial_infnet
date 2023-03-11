@@ -12,7 +12,7 @@ using RedeSocial_infnet.Service.ViewModel;
 
 namespace RedeSocial_infnet.API.Controllers
 {
-    [Authorize]
+  
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -23,11 +23,11 @@ namespace RedeSocial_infnet.API.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Post
+            
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
+            Console.WriteLine("entrou aqui");
             return await _context.Posts.ToListAsync();
         }
 
@@ -36,10 +36,9 @@ namespace RedeSocial_infnet.API.Controllers
         {
             return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();         
         }
-
-        // GET: api/Post/5
+             
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public async Task<ActionResult<PostViewModel>> GetPost(int id)
         {
             var post = await _context.Posts.FindAsync(id);
 
@@ -48,7 +47,12 @@ namespace RedeSocial_infnet.API.Controllers
                 return NotFound();
             }
 
-            return post;
+            PostViewModel postViewModel = new PostViewModel();
+            postViewModel.UserName = post.UserName;
+            postViewModel.Titulo = post.Titulo;
+            postViewModel.Conteudo = post.Conteudo;
+            postViewModel.CriadoEm = post.CriadoEm;
+            return postViewModel;
         }
 
         
@@ -62,10 +66,10 @@ namespace RedeSocial_infnet.API.Controllers
                 return BadRequest();
             }
 
-            if(post.UserName != User.Identity.Name)
-            {
-                return Unauthorized();
-            }
+            //if(post.UserName != User.Identity.Name)
+            //{
+            //    return Unauthorized();
+            //}
 
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;
@@ -94,23 +98,29 @@ namespace RedeSocial_infnet.API.Controllers
             return NoContent();
         }
 
-     
+
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(PostViewModel postViewModel)
+        public async Task<ActionResult<PostViewModel>> PostPost(PostViewModel postViewModel)
         {
+            postViewModel.UserName = User.Identity.Name;
+
             Post post = new Post();
-            post.UserName = User.Identity.Name;
+           
+            post.UserName = postViewModel.UserName;
             post.CriadoEm = DateTime.Now;
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;
 
+          
+        
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            return CreatedAtAction("GetPost", new { id = post.Id }, postViewModel);
         }
+              
 
-       
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
@@ -119,10 +129,10 @@ namespace RedeSocial_infnet.API.Controllers
             {
                 return NotFound();
             }
-            if(post.UserName != User.Identity.Name)
-            {
-                return Unauthorized();
-            }
+            //if(post.UserName != User.Identity.Name)
+            //{
+            //    return Unauthorized();
+            //}
 
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<RedeSocial_infnet.Service.ViewModel.PostViewModel>
+
+
+
+<h1 class="text-center">Feed de postagens</h1>
+<hr />
+
+<p>
+    <a asp-action="NovoPost">Create New</a>
+</p>
+<table class="table">
+    <thead class="text-center">
+        <tr>
+            <th>
+               Título
+            </th>
+            <th>
+                Postagem
+            </th>
+            <th>
+                Usuário
+            </th>
+            
+            <th>
+                Postado em:
+            </th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        @foreach (var item in Model)
+        {
+            <tr >
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Conteudo)
+                </td>    
+                 <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CriadoEm)
+                </td>
+                <td>
+                    @Html.ActionLink("", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

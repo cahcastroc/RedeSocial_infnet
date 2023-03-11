@@ -16,6 +16,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedeSocial_infnet.Service",
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedeSocial_infnet.MVC", "RedeSocial_infnet.MVC\RedeSocial_infnet.MVC.csproj", "{9CA75792-E6FB-4BE8-8195-0F36645E2487}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3E9F1CFE-A486-4CCE-8751-82692A0F2A6D} = {3E9F1CFE-A486-4CCE-8751-82692A0F2A6D}
+		{499F9D3F-2679-435A-87FD-68D2D1B6CCF3} = {499F9D3F-2679-435A-87FD-68D2D1B6CCF3}
+		{ECD4A103-CE7C-4455-B886-4A4E9D213B1E} = {ECD4A103-CE7C-4455-B886-4A4E9D213B1E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

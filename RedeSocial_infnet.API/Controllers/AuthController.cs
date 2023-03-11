@@ -69,18 +69,25 @@ namespace RedeSocial_infnet.API.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] Login credenciais)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
+            Console.WriteLine("entrou no login");
+            Login credenciais = new Login();
+            credenciais.UserName = loginViewModel.UserName;
+            credenciais.Password = loginViewModel.Password;
+
             Usuario usuario;
 
             if (!ModelState.IsValid
                 || credenciais == null
                 || (usuario = await ValidateUser(credenciais)) == null)
             {
+                Console.WriteLine("Login inválido");
                 return new BadRequestObjectResult(new { Message = "Falha no Login" });
             }
 
             var token = GenerateToken(usuario);
+            Console.WriteLine("deu");
             return Ok(new { Token = token, Message = "Login efetuado com Sucesso" });
         }
 
