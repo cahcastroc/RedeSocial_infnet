@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RedeSocial_infnet.Service.ViewModel;
-using System.Net.Http;
+
 
 namespace RedeSocial_infnet.MVC.Controllers
 {
@@ -17,7 +16,7 @@ namespace RedeSocial_infnet.MVC.Controllers
 
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {         
             return View();
         }

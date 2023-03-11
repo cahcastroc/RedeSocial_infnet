@@ -73,7 +73,7 @@ namespace RedeSocial_infnet.API.Controllers
 
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;
-            post.UserName = User.Identity.Name;
+            post.UserName = postViewModel.UserName;
             post.EditadoEm = DateTime.Now;
 
 

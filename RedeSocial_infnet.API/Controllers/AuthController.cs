@@ -88,7 +88,7 @@ namespace RedeSocial_infnet.API.Controllers
 
             var token = GenerateToken(usuario);
             Console.WriteLine("deu");
-            return Ok(new { Token = token, Message = "Login efetuado com Sucesso" });
+            return Ok(token);
         }
 
         [HttpPut]

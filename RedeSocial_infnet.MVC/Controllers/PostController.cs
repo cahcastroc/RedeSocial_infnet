@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using RedeSocial_infnet.Domain.Models;
 using RedeSocial_infnet.Service.ViewModel;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 
 namespace RedeSocial_infnet.MVC.Controllers
@@ -33,18 +35,14 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> NovoPost(PostViewModel postViewModel)
         {
-
-            if (User.Identity.IsAuthenticated)
-            {
-                Console.WriteLine("Usuário logado" + User.Identity.Name);
-            }
-            else {
-                Console.WriteLine("Não tá logado");
-            }
+                     
 
 
             using (var httpClient = new HttpClient())
-            {
+            {                            
+              
+                var token = Request.Cookies["jwt"];
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 StringContent content = new StringContent(JsonConvert.SerializeObject(postViewModel), Encoding.UTF8, "application/json");
 
 
