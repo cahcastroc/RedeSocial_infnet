@@ -32,8 +32,8 @@ namespace RedeSocial_infnet.API.Controllers
 
 
         [HttpPost]
-        [Route("Registro")]
-        public async Task<IActionResult> Registro([FromBody] UsuarioViewModel user)
+        [Route("Cadastro")]
+        public async Task<IActionResult> Cadastro([FromBody] UsuarioViewModel user)
         {
             if (!ModelState.IsValid || user == null)
             {

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using RedeSocial_infnet.MVC.Models;
 using RedeSocial_infnet.Service.ViewModel;
 
 
@@ -19,6 +21,33 @@ namespace RedeSocial_infnet.MVC.Controllers
         public async Task<IActionResult> Login()
         {         
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Cadastro()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cadastro(UsuarioViewModel model)
+        {
+            
+
+            var httpClient = _clientFactory.CreateClient();
+            var response = await httpClient.PostAsJsonAsync("https://localhost:7098/api/Auth/Cadastro", model);
+            if (response.IsSuccessStatusCode)
+            {
+               
+                return RedirectToAction("Login", "Auth");
+            }
+            else { 
+                ModelState.AddModelError("", "Erro ao realizar o cadastro. Verifique os dados inseridos e tente novamente");
+                return View(model);
+            
+            }
         }
 
 

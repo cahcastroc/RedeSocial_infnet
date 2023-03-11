@@ -1,0 +1,56 @@
+﻿@model RedeSocial_infnet.Service.ViewModel.UsuarioViewModel;
+
+
+
+
+@if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+    }
+
+<div class="align-content-center">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center">Cadastro:</h2>
+            <hr />
+            <form asp-action="Cadastro" method="post" class="form-horizontal" role="form">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">                    
+                    @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Localidade, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.Localidade, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Localidade, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="AreaMigracao">Qua a área desejada para migração de carreira?</label>
+                    @Html.TextBoxFor(m => m.AreaMigracao, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.AreaMigracao, "", new { @class = "text-danger" })
+                </div>
+                <br />
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-primary">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
