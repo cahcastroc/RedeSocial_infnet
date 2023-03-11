@@ -11,6 +11,8 @@ namespace RedeSocial_infnet.MVC.Controllers
 {
     public class PostController : Controller
     {
+        [Route("feed")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             
@@ -53,6 +55,32 @@ namespace RedeSocial_infnet.MVC.Controllers
                 }
             }
             return View(postViewModel);
+        }
+
+
+        [HttpGet]
+        [Route("posts/usuario/{userName}")]
+        public async Task<IActionResult> PostsUsuario(string userName)
+        {
+        
+            using (var httpClient = new HttpClient())
+            {
+                var token = Request.Cookies["jwt"];
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Post/usuario/{userName}"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        var posts = JsonConvert.DeserializeObject<List<PostViewModel>>(apiResponse);
+                        return View(posts);
+                    }
+                    else
+                    {                        
+                        return BadRequest();
+                    }
+                }
+            }
         }
 
     }

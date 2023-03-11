@@ -5,14 +5,12 @@
 <h1 class="text-center">Feed de postagens</h1>
 <hr />
 
-<p>
-    <a asp-action="NovoPost">Create New</a>
-</p>
+
 <table class="table">
     <thead class="text-center">
         <tr>
             <th>
-               Título
+                Título
             </th>
             <th>
                 Postagem
@@ -20,7 +18,7 @@
             <th>
                 Usuário
             </th>
-            
+
             <th>
                 Postado em:
             </th>
@@ -29,23 +27,23 @@
     <tbody class="text-center">
         @foreach (var item in Model)
         {
-            <tr >
+            <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Titulo)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Conteudo)
-                </td>    
-                 <td>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CriadoEm)
                 </td>
                 <td>
-                    @Html.ActionLink("Postagens do usuário", "PostsUsuario", new { userName = item.UserName })
 
-                 
+
+
                 </td>
             </tr>
         }
