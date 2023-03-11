@@ -87,7 +87,7 @@ namespace RedeSocial_infnet.API.Controllers
             }
 
             var token = GenerateToken(usuario);
-            Console.WriteLine("deu");
+            Console.WriteLine("Token gerado");
             return Ok(token);
         }
 
@@ -135,7 +135,8 @@ namespace RedeSocial_infnet.API.Controllers
             if (identityUser != null)
             {
                 PasswordVerificationResult result = userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, credenciais.Password);
-                Console.WriteLine("deu ruim " + result);
+               
+                Console.WriteLine("result se a senha é ok: " + result);
                 return result == PasswordVerificationResult.Failed ? null : identityUser;
             }
 

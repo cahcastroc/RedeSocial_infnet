@@ -16,6 +16,10 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(options =>
 {
     options.LoginPath = "/Auth/Login";
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
     //options.LogoutPath = "/Auth/Logout";
     //options.AccessDeniedPath = "/Auth/AccessDenied";
 })
@@ -64,5 +68,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.UseExceptionHandler("/Home/Error");
+
+
 
 app.Run();

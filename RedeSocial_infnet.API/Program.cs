@@ -28,27 +28,57 @@ var jwtSection = builder.Configuration.GetSection("JwtConfig");
 builder.Services.Configure<JwtConfig>(jwtSection);
 var jwtBearerTokenSettings = jwtSection.Get<JwtConfig>();  
 var key = Encoding.ASCII.GetBytes(jwtBearerTokenSettings.SecretKey);
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//    .AddJwtBearer(options =>
+//    {
+//        options.RequireHttpsMetadata = false;
+//        options.SaveToken = true;
+//        options.TokenValidationParameters = new TokenValidationParameters()
+//        {
+//            ValidateIssuer = true,
+//            ValidIssuer = jwtBearerTokenSettings.Issuer,
+//            ValidateAudience = true,
+//            ValidAudience = jwtBearerTokenSettings.Audience,
+//            ValidateIssuerSigningKey = true,
+//            IssuerSigningKey = new SymmetricSecurityKey(key),
+//            ValidateLifetime = true,
+//            ClockSkew = TimeSpan.Zero
+//        };
+//    });
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(options =>
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters()
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtBearerTokenSettings.Issuer, // defina seu emissor aqui
+        ValidAudience = jwtBearerTokenSettings.Audience, // defina sua audiência aqui
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtBearerTokenSettings.SecretKey)), // defina sua chave secreta aqui
+        ClockSkew = TimeSpan.Zero,
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
         {
-            ValidateIssuer = true,
-            ValidIssuer = jwtBearerTokenSettings.Issuer,
-            ValidateAudience = true,
-            ValidAudience = jwtBearerTokenSettings.Audience,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+            var token = context.Request.Cookies["jwt"]; // obter token do cookie
+            context.Token = token; // definir token do cookie como token JWT
+            return Task.CompletedTask;
+        }
+    };
+});
+
 
 
 

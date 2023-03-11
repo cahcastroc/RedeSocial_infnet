@@ -72,7 +72,8 @@ namespace RedeSocial_infnet.MVC.Controllers
                     Expires = DateTimeOffset.Now.AddMinutes(10)
                 });
 
-               
+                Console.WriteLine("Deu bom no login front");
+
                 return RedirectToAction("Index", "Post");
             }
             else

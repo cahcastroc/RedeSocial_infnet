@@ -12,6 +12,7 @@ using RedeSocial_infnet.Service.ViewModel;
 
 namespace RedeSocial_infnet.API.Controllers
 {
+
   
     [Route("api/[controller]")]
     [ApiController]
@@ -27,32 +28,53 @@ namespace RedeSocial_infnet.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            Console.WriteLine("entrou aqui");
-            return await _context.Posts.ToListAsync();
+            if (User.Identity.IsAuthenticated)
+            {             
+                return await _context.Posts.ToListAsync();
+            }
+            else {
+                return Unauthorized();
+            }
+            
         }
 
         [HttpGet("usuario/{userName}")]
         public async Task<ActionResult<IEnumerable<Post>>> GetPostsUser(string userName)
         {
-            return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();         
+            if (User.Identity.IsAuthenticated)
+            {
+                return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+                  
         }
              
         [HttpGet("{id}")]
         public async Task<ActionResult<PostViewModel>> GetPost(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-
-            if (post == null)
+            if (User.Identity.IsAuthenticated)
             {
-                return NotFound();
-            }
+                var post = await _context.Posts.FindAsync(id);
 
-            PostViewModel postViewModel = new PostViewModel();
-            postViewModel.UserName = post.UserName;
-            postViewModel.Titulo = post.Titulo;
-            postViewModel.Conteudo = post.Conteudo;
-            postViewModel.CriadoEm = post.CriadoEm;
-            return postViewModel;
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                PostViewModel postViewModel = new PostViewModel();
+                postViewModel.UserName = post.UserName;
+                postViewModel.Titulo = post.Titulo;
+                postViewModel.Conteudo = post.Conteudo;
+                postViewModel.CriadoEm = post.CriadoEm;
+                return postViewModel;
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
 

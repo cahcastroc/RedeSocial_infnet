@@ -1,26 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using RedeSocial_infnet.Domain.Models;
 using RedeSocial_infnet.Service.ViewModel;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
 namespace RedeSocial_infnet.MVC.Controllers
 {
+    
     public class PostController : Controller
     {
-        [Route("feed")]
+      
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            
             List<PostViewModel> postagens = new List<PostViewModel>();
+
 
             using (var client = new HttpClient())
             {
-               using (var response = await client.GetAsync("https://localhost:7098/api/post"))
+                var token = Request.Cookies["jwt"];
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Console.WriteLine("Token front post " +token);
+                using (var response = await client.GetAsync("https://localhost:7098/api/post"))
                 {
                    string apiResponse = await response.Content.ReadAsStringAsync();
                    postagens = JsonConvert.DeserializeObject<List<PostViewModel>>(apiResponse);
@@ -31,6 +37,7 @@ namespace RedeSocial_infnet.MVC.Controllers
             return View(postagens);
         }
 
+ 
         public ViewResult NovoPost() => View();
 
 
@@ -58,8 +65,7 @@ namespace RedeSocial_infnet.MVC.Controllers
         }
 
 
-        [HttpGet]
-        [Route("posts/usuario/{userName}")]
+        [HttpGet]       
         public async Task<IActionResult> PostsUsuario(string userName)
         {
         
