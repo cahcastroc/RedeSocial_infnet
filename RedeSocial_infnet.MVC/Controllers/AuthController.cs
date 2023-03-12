@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RedeSocial_infnet.MVC.Models;
 using RedeSocial_infnet.Service.ViewModel;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -25,8 +28,8 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpGet]
         public ViewResult Cadastro() => View();
 
-        [HttpGet]
-        public ViewResult Editar() => View();
+        //[HttpGet]
+        //public ViewResult Editar() => View();
 
 
 
@@ -48,6 +51,8 @@ namespace RedeSocial_infnet.MVC.Controllers
             
             }
         }
+
+
 
 
 
@@ -81,6 +86,50 @@ namespace RedeSocial_infnet.MVC.Controllers
             }
         }
 
+
+        public async Task<ActionResult> Editar(string userName)
+        {
+
+            var token = Request.Cookies["jwt"];
+            //var handler = new JwtSecurityTokenHandler();
+            //var tokenS = handler.ReadJwtToken(token);
+            //var name = tokenS.Claims.First(c => c.Type == "userName").Value;
+
+            //if(userName != name)
+            //{
+            //    return RedirectToAction("Erro401", "Home");
+            //}
+
+            EdicaoUsuarioViewModel usuarioEdicao = new EdicaoUsuarioViewModel();
+            using (var httpClient = new HttpClient())
+            {
+                UsuarioViewModel usuario = new UsuarioViewModel();
+               
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Auth/Perfil/{userName}"))
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Erro401", "Home");
+                    }
+
+                    var apiResponse = await response.Content.ReadAsStringAsync();
+                    var usuarioResponse = JsonConvert.DeserializeObject<UsuarioViewModel>(apiResponse);
+                    usuario = usuarioResponse;
+
+                }
+                usuarioEdicao.userName = usuario.UserName;
+                usuarioEdicao.Email = usuario.Email;
+                usuarioEdicao.Localidade = usuario.Localidade;
+                usuarioEdicao.AreaMigracao = usuario.AreaMigracao;
+            }
+            Console.WriteLine("nome do usuário" + usuarioEdicao.userName);
+            return View(usuarioEdicao);
+        }
+
+
+
         //[HttpPut]
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> Editar(EdicaoUsuarioViewModel model)
@@ -106,21 +155,21 @@ namespace RedeSocial_infnet.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(string userName,EdicaoUsuarioViewModel model)
+        public async Task<IActionResult> Editar(EdicaoUsuarioViewModel model)
         {
-            
+                      
             using (var client = new HttpClient())
             {
                 var token = Request.Cookies["jwt"];
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-                using (var resposta = await client.PutAsync($"https://localhost:7098/api/auth/editar/{userName}", content))
+                using (var resposta = await client.PutAsync($"https://localhost:7098/api/auth/editar/{model.userName}", content))
                 {
-                    if (!resposta.IsSuccessStatusCode)
+                    if (resposta.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        ModelState.AddModelError("", "Erro ao atualizar os dados. Verifique os dados inseridos e tente novamente.");
-                    }
+                        return RedirectToAction("Erro401", "Home");
+                    }                   
                 }
             }
 

@@ -53,8 +53,6 @@ namespace RedeSocial_infnet.MVC.Controllers
                 }
             }
 
-
-
         }
 
 
@@ -73,13 +71,10 @@ namespace RedeSocial_infnet.MVC.Controllers
         public async Task<IActionResult> NovoPost(PostViewModel postViewModel)
         {
         
-
             using (var httpClient = new HttpClient())
             {
 
-               
-
-                //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
                 StringContent content = new StringContent(JsonConvert.SerializeObject(postViewModel), Encoding.UTF8, "application/json");
 
 
@@ -92,10 +87,8 @@ namespace RedeSocial_infnet.MVC.Controllers
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     postViewModel = JsonConvert.DeserializeObject<PostViewModel>(apiResponse);
                     return View(postViewModel);
-                }
-               
-            }
-           
+                }               
+            }           
         }
 
 
@@ -105,8 +98,8 @@ namespace RedeSocial_infnet.MVC.Controllers
 
             using (var httpClient = new HttpClient())
             {
-                var token = Request.Cookies["jwt"];
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+               
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
                 using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Post/usuario/{userName}"))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -128,9 +121,6 @@ namespace RedeSocial_infnet.MVC.Controllers
         }
 
     }
-
-    //public ViewResult Create() => View();
-
 
 
 }

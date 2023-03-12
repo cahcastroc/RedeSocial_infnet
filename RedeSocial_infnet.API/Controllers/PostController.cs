@@ -30,10 +30,10 @@ namespace RedeSocial_infnet.API.Controllers
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
                  
-                return await _context.Posts.ToListAsync();
-           
+                return await _context.Posts.ToListAsync();           
             
         }
+
         [Authorize]
         [HttpGet("usuario/{userName}")]
         public async Task<ActionResult<IEnumerable<Post>>> GetPostsUser(string userName)
@@ -108,7 +108,7 @@ namespace RedeSocial_infnet.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<ActionResult<PostViewModel>> PostPost(PostViewModel postViewModel)
         {

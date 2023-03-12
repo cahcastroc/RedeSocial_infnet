@@ -32,8 +32,9 @@ namespace RedeSocial_infnet.API.Controllers
 
         [Authorize]
         [HttpGet("perfil/{userName}")]
-        public async Task<ActionResult<UsuarioViewModel>> Perfil(string userName) { 
-        
+        public async Task<ActionResult<UsuarioViewModel>> Perfil(string userName)
+        {
+
             Usuario usuario = await userManager.FindByNameAsync(userName);
 
             if (usuario == null)
@@ -46,7 +47,7 @@ namespace RedeSocial_infnet.API.Controllers
                 UserName = usuario.UserName,
                 Email = usuario.Email,
                 Localidade = usuario.Localidade,
-                AreaMigracao = usuario.AreaMigracao,               
+                AreaMigracao = usuario.AreaMigracao,
             };
 
             return Ok(usuarioViewModel);
@@ -73,10 +74,10 @@ namespace RedeSocial_infnet.API.Controllers
 
             IdentityUser identityUser = new IdentityUser() { UserName = usuario.UserName, Email = usuario.Email };
 
-           var identityResult = await userManager.CreateAsync(usuario, usuario.Password);
+            var identityResult = await userManager.CreateAsync(usuario, usuario.Password);
             if (!identityResult.Succeeded)
             {
-                ModelStateDictionary dictionary = new ModelStateDictionary();               
+                ModelStateDictionary dictionary = new ModelStateDictionary();
                 foreach (IdentityError error in identityResult.Errors)
                 {
                     dictionary.AddModelError(error.Code, error.Description);
@@ -114,8 +115,8 @@ namespace RedeSocial_infnet.API.Controllers
 
         //[Authorize]
         [HttpPut]
-        [Route("/editar/{userName}")]
-        public async Task<IActionResult> Editar(string userName, [FromBody] EdicaoUsuarioViewModel usuarioAtualizado)
+        [Route("Editar/{userName}")]
+        public async Task<IActionResult> Editar(string userName,[FromBody] EdicaoUsuarioViewModel usuarioAtualizado)
         {
             Console.WriteLine(" Entrou no put");
             if (usuarioAtualizado == null)
@@ -123,9 +124,9 @@ namespace RedeSocial_infnet.API.Controllers
                 return new BadRequestObjectResult(new { Message = "Falha ao editar o usuário." });
             }
 
-            if(userName != User.Identity.Name)
+            if (userName != User.Identity.Name)
             {
-                return new BadRequestObjectResult(new { Message = "Você não tem permissão para editar este usuário." });
+                return new UnauthorizedObjectResult(new { Message = "Você não tem permissão para editar este usuário." });
             }
 
             Usuario usuarioAtual = await userManager.FindByNameAsync(userName);
@@ -135,8 +136,8 @@ namespace RedeSocial_infnet.API.Controllers
                 Console.WriteLine(" null");
                 return NotFound();
             }
-
-            usuarioAtual.Email = usuarioAtualizado.Email;      
+            usuarioAtual.UserName = usuarioAtualizado.userName;
+            usuarioAtual.Email = usuarioAtualizado.Email;
             usuarioAtual.Localidade = usuarioAtualizado.Localidade;
             usuarioAtual.AreaMigracao = usuarioAtualizado.AreaMigracao;
             usuarioAtual.EditadoEm = DateTime.Now;
@@ -156,12 +157,11 @@ namespace RedeSocial_infnet.API.Controllers
         }
         private async Task<Usuario> ValidateUser(Login credenciais)
         {
-           Usuario identityUser = await userManager.FindByNameAsync(credenciais.UserName);
+            Usuario identityUser = await userManager.FindByNameAsync(credenciais.UserName);
             if (identityUser != null)
             {
                 PasswordVerificationResult result = userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, credenciais.Password);
-               
-                Console.WriteLine("result se a senha é ok: " + result);
+
                 return result == PasswordVerificationResult.Failed ? null : identityUser;
             }
 
@@ -172,14 +172,14 @@ namespace RedeSocial_infnet.API.Controllers
         {
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(jwtBearerTokenConfig.SecretKey);
-            
+
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, usuario.UserName.ToString()),
                     new Claim(ClaimTypes.Email, usuario.Email)
-                   
+
                 }),
 
                 Expires = DateTime.UtcNow.AddSeconds(jwtBearerTokenConfig.ExpiryTimeInSeconds),
@@ -187,7 +187,6 @@ namespace RedeSocial_infnet.API.Controllers
                 Audience = jwtBearerTokenConfig.Audience,
                 Issuer = jwtBearerTokenConfig.Issuer
             };
-
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
