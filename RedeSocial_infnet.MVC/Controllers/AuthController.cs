@@ -2,7 +2,8 @@
 using Newtonsoft.Json;
 using RedeSocial_infnet.MVC.Models;
 using RedeSocial_infnet.Service.ViewModel;
-
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace RedeSocial_infnet.MVC.Controllers
 {
@@ -18,16 +19,15 @@ namespace RedeSocial_infnet.MVC.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Login()
-        {         
-            return View();
-        }
+        public ViewResult Login() => View();
+    
 
         [HttpGet]
-        public async Task<IActionResult> Cadastro()
-        {
-            return View();
-        }
+        public ViewResult Cadastro() => View();
+
+        [HttpGet]
+        public ViewResult Editar() => View();
+
 
 
         [HttpPost]
@@ -39,8 +39,7 @@ namespace RedeSocial_infnet.MVC.Controllers
             var httpClient = _clientFactory.CreateClient();
             var response = await httpClient.PostAsJsonAsync("https://localhost:7098/api/Auth/Cadastro", model);
             if (response.IsSuccessStatusCode)
-            {
-               
+            {               
                 return RedirectToAction("Login", "Auth");
             }
             else { 
@@ -70,9 +69,7 @@ namespace RedeSocial_infnet.MVC.Controllers
                     SameSite = SameSiteMode.None,
                     Secure = true,
                     Expires = DateTimeOffset.Now.AddMinutes(10)
-                });
-
-                Console.WriteLine("Deu bom no login front");
+                });                          
 
                 return RedirectToAction("Index", "Post");
             }
@@ -83,6 +80,53 @@ namespace RedeSocial_infnet.MVC.Controllers
                 return View(model);
             }
         }
+
+        //[HttpPut]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Editar(EdicaoUsuarioViewModel model)
+        //{
+        //    using (var client = new HttpClient())
+        //    {
+
+        //        var token = Request.Cookies["jwt"];
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //        StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+
+        //        using (var resposta = await client.PutAsync("https://localhost:7098/api/Post", content))
+        //        {
+        //            string apiResponse = await resposta.Content.ReadAsStringAsync();
+        //            model = JsonConvert.DeserializeObject<EdicaoUsuarioViewModel>(apiResponse);
+        //        }
+        //    }
+
+        //    return View(model);                       
+
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Editar(string userName,EdicaoUsuarioViewModel model)
+        {
+            
+            using (var client = new HttpClient())
+            {
+                var token = Request.Cookies["jwt"];
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+                using (var resposta = await client.PutAsync($"https://localhost:7098/api/auth/editar/{userName}", content))
+                {
+                    if (!resposta.IsSuccessStatusCode)
+                    {
+                        ModelState.AddModelError("", "Erro ao atualizar os dados. Verifique os dados inseridos e tente novamente.");
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
 
 
     }

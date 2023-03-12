@@ -6,7 +6,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//Autenticação e Token
+//HttpContext - Obter valor token do cookie nos controllers
+
+builder.Services.AddHttpContextAccessor();
+
+//HttpClient
+builder.Services.AddHttpClient();
+
+
+
+//Config de Autenticação e Token
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -39,9 +48,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-//HttpClient
-builder.Services.AddHttpClient();
-  
 
 
 var app = builder.Build();
@@ -70,7 +76,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-app.UseExceptionHandler("/Home/Error");
+//app.UseExceptionHandler("/Home/Error");
 
 
 

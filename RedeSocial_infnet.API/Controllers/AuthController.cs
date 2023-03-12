@@ -30,6 +30,27 @@ namespace RedeSocial_infnet.API.Controllers
             this.signInManager = signInManager;
         }
 
+        [Authorize]
+        [HttpGet("perfil/{userName}")]
+        public async Task<ActionResult<UsuarioViewModel>> Perfil(string userName) { 
+        
+            Usuario usuario = await userManager.FindByNameAsync(userName);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            UsuarioViewModel usuarioViewModel = new UsuarioViewModel
+            {
+                UserName = usuario.UserName,
+                Email = usuario.Email,
+                Localidade = usuario.Localidade,
+                AreaMigracao = usuario.AreaMigracao,               
+            };
+
+            return Ok(usuarioViewModel);
+        }
 
         [HttpPost]
         [Route("Cadastro")]
@@ -91,11 +112,12 @@ namespace RedeSocial_infnet.API.Controllers
             return Ok(token);
         }
 
+        //[Authorize]
         [HttpPut]
-        [Authorize]
-        [Route("Editar")]
+        [Route("/editar/{userName}")]
         public async Task<IActionResult> Editar(string userName, [FromBody] EdicaoUsuarioViewModel usuarioAtualizado)
         {
+            Console.WriteLine(" Entrou no put");
             if (usuarioAtualizado == null)
             {
                 return new BadRequestObjectResult(new { Message = "Falha ao editar o usuário." });
@@ -110,6 +132,7 @@ namespace RedeSocial_infnet.API.Controllers
 
             if (usuarioAtual == null)
             {
+                Console.WriteLine(" null");
                 return NotFound();
             }
 
@@ -122,10 +145,12 @@ namespace RedeSocial_infnet.API.Controllers
 
             if (resultado.Succeeded)
             {
+                Console.WriteLine("Editou ok");
                 return Ok(new { Message = "Usuário editado com sucesso" });
             }
             else
             {
+                Console.WriteLine(" Não Editou");
                 return BadRequest(new { Message = "Falha ao editar o usuário." });
             }
         }

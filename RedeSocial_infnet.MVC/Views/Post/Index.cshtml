@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RedeSocial_infnet.Service.ViewModel.PostViewModel>
+﻿@model IEnumerable<RedeSocial_infnet.Domain.Models.Post>
 
 
 
@@ -42,8 +42,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CriadoEm)
                 </td>
+           
                 <td>
-                    @Html.ActionLink("Postagens do usuário", "PostsUsuario", new { userName = item.UserName })                 
+                    @Html.ActionLink("Visualizar Perfil", "Index", "Perfil", new { userName = item.UserName })
+
                 </td>
             </tr>
         }

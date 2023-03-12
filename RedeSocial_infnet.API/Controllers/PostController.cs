@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,39 +25,30 @@ namespace RedeSocial_infnet.API.Controllers
         {
             _context = context;
         }
-            
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            if (User.Identity.IsAuthenticated)
-            {             
+                 
                 return await _context.Posts.ToListAsync();
-            }
-            else {
-                return Unauthorized();
-            }
+           
             
         }
-
+        [Authorize]
         [HttpGet("usuario/{userName}")]
         public async Task<ActionResult<IEnumerable<Post>>> GetPostsUser(string userName)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();
-            }
-            else
-            {
-                return Unauthorized();
-            }
+          
+            return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();
+            
+         
                   
         }
-             
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<PostViewModel>> GetPost(int id)
         {
-            if (User.Identity.IsAuthenticated)
-            {
+         
                 var post = await _context.Posts.FindAsync(id);
 
                 if (post == null)
@@ -69,16 +61,11 @@ namespace RedeSocial_infnet.API.Controllers
                 postViewModel.Titulo = post.Titulo;
                 postViewModel.Conteudo = post.Conteudo;
                 postViewModel.CriadoEm = post.CriadoEm;
-                return postViewModel;
-            }
-            else
-            {
-                return Unauthorized();
-            }
+                return postViewModel;           
         }
 
 
-        
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, PostViewModel postViewModel)
         {
@@ -121,15 +108,16 @@ namespace RedeSocial_infnet.API.Controllers
             return NoContent();
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<PostViewModel>> PostPost(PostViewModel postViewModel)
         {
             postViewModel.UserName = User.Identity.Name;
 
             Post post = new Post();
-           
+
             post.UserName = postViewModel.UserName;
+            post.UserName = "Camila";
             post.CriadoEm = DateTime.Now;
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;

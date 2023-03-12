@@ -1,0 +1,84 @@
+﻿@model RedeSocial_infnet.Service.ViewModel.PerfilViewModel;
+
+
+
+<div class="container mt-4">
+@*    <h3 class="text-center">Perfil de @Model.Usuario.UserName</h3>   *@
+
+    
+        <table class="table table-striped">
+            <tbody class="text-center">                
+                <tr>
+                    <td><strong>E-mail:</strong></td>
+                    <td>@Model.Usuario.Email</td>
+                </tr>
+                <tr>
+                    <td><strong>Localidade:</strong></td>
+                    <td>@Model.Usuario.Localidade</td>
+                </tr>
+                <tr>
+                    <td><strong>Área desejada no TI:</strong></td>
+                    <td>@Model.Usuario.AreaMigracao</td>
+                </tr>
+            </tbody>
+        </table>
+    <button type="button" class="btn btn-outline-primary">
+        @Html.ActionLink("Editar Perfil", "Editar", "Auth", new { userName = Model.Usuario.UserName })
+    </button>
+</div>
+<br />
+<br />
+
+
+<h4 class="text-center">Postagens</h4>
+<hr />
+
+
+<table class="table">
+    <thead class="text-center">
+        <tr>
+            <th>
+                Título
+            </th>
+            <th>
+                Postagem
+            </th>
+            <th>
+                Usuário
+            </th>
+
+            <th>
+                Postado em:
+            </th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        @foreach (var item in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Conteudo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CriadoEm)
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<br />
+
+
+@*<h4 class="text-center">Galeria</h4>
+<hr />*@
+

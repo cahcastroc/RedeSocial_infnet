@@ -50,6 +50,8 @@ var key = Encoding.ASCII.GetBytes(jwtBearerTokenSettings.SecretKey);
 //        };
 //    });
 
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,6 +59,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -78,6 +81,8 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+
+
 
 
 
