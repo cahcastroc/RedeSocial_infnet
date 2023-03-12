@@ -14,7 +14,7 @@ using RedeSocial_infnet.Service.ViewModel;
 namespace RedeSocial_infnet.API.Controllers
 {
 
-  
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -25,7 +25,8 @@ namespace RedeSocial_infnet.API.Controllers
         {
             _context = context;
         }
-        [Authorize]
+     
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
@@ -34,17 +35,16 @@ namespace RedeSocial_infnet.API.Controllers
             
         }
 
-        [Authorize]
+       
         [HttpGet("usuario/{userName}")]
         public async Task<ActionResult<IEnumerable<Post>>> GetPostsUser(string userName)
         {
           
-            return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();
-            
+            return await _context.Posts.Where(p => p.UserName == userName).ToListAsync();           
          
                   
         }
-        [Authorize]
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<PostViewModel>> GetPost(int id)
         {
@@ -63,52 +63,9 @@ namespace RedeSocial_infnet.API.Controllers
                 postViewModel.CriadoEm = post.CriadoEm;
                 return postViewModel;           
         }
-
-
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(int id, PostViewModel postViewModel)
-        {
-            Post post = await _context.Posts.FindAsync(id);
-
-            if (id != post.Id)
-            {
-                return BadRequest();
-            }
-
-            //if(post.UserName != User.Identity.Name)
-            //{
-            //    return Unauthorized();
-            //}
-
-            post.Titulo = postViewModel.Titulo;
-            post.Conteudo = postViewModel.Conteudo;
-            post.UserName = postViewModel.UserName;
-            post.EditadoEm = DateTime.Now;
-
-
-            _context.Entry(post).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PostExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        //[Authorize]
+              
+        
+       
         [HttpPost]
         public async Task<ActionResult<PostViewModel>> PostPost(PostViewModel postViewModel)
         {
@@ -116,8 +73,7 @@ namespace RedeSocial_infnet.API.Controllers
 
             Post post = new Post();
 
-            post.UserName = postViewModel.UserName;
-            post.UserName = "Camila";
+            post.UserName = postViewModel.UserName;          
             post.CriadoEm = DateTime.Now;
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;
@@ -129,27 +85,7 @@ namespace RedeSocial_infnet.API.Controllers
 
             return CreatedAtAction("GetPost", new { id = post.Id }, postViewModel);
         }
-              
-
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(int id)
-        {
-            Post post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            //if(post.UserName != User.Identity.Name)
-            //{
-            //    return Unauthorized();
-            //}
-
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+                      
 
         private bool PostExists(int id)
         {

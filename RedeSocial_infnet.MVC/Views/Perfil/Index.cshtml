@@ -3,32 +3,41 @@
 
 
 <div class="container mt-4">
-@*    <h3 class="text-center">Perfil de @Model.Usuario.UserName</h3>   *@
+    <h3 class="text-center">Perfil de @Model.Usuario.UserName</h3>
 
+    <table class="table table-striped">
+        <tbody class="text-center">
+            <tr>
+                <td><strong>E-mail:</strong></td>
+                <td>@Model.Usuario.Email</td>
+            </tr>
+            <tr>
+                <td><strong>Localidade:</strong></td>
+                <td>@Model.Usuario.Localidade</td>
+            </tr>
+            <tr>
+                <td><strong>Área desejada no TI:</strong></td>
+                <td>@Model.Usuario.AreaMigracao</td>
+            </tr>
+        </tbody>
+    </table>
     
-        <table class="table table-striped">
-            <tbody class="text-center">                
-                <tr>
-                    <td><strong>E-mail:</strong></td>
-                    <td>@Model.Usuario.Email</td>
-                </tr>
-                <tr>
-                    <td><strong>Localidade:</strong></td>
-                    <td>@Model.Usuario.Localidade</td>
-                </tr>
-                <tr>
-                    <td><strong>Área desejada no TI:</strong></td>
-                    <td>@Model.Usuario.AreaMigracao</td>
-                </tr>
-            </tbody>
-        </table>
-    <button type="button" class="btn btn-outline-primary">
-        @Html.ActionLink("Editar Perfil", "Editar", "Auth", new { userName = Model.Usuario.UserName })
-    </button>
+    @if (Model.Usuario.UserName == ViewBag.UserName)
+    {
+    <div class="text-center">
+        <button type="button" class="btn btn-outline-primary">
+            @Html.ActionLink("Editar o seu Perfil", "Editar", "Auth", new { userName = Model.Usuario.UserName })
+        </button>
+         <button type="button" class="btn btn-outline-primary">
+                @Html.ActionLink("Nova postagem", "NovoPost", "Post")
+        </button>
+    </div>
+    }
+
+
 </div>
 <br />
 <br />
-
 
 <h4 class="text-center">Postagens</h4>
 <hr />
@@ -78,7 +87,4 @@
 <br />
 <br />
 
-
-@*<h4 class="text-center">Galeria</h4>
-<hr />*@
 

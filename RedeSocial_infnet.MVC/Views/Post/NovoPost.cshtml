@@ -1,11 +1,10 @@
 ﻿@model RedeSocial_infnet.Service.ViewModel.PostViewModel;
-@*@model RedeSocial_infnet.Domain.Models.Post;*@
 
-@*@{
-    Layout = "_Layout"; ViewBag.Title = "Add a Product";
-}
-*@
-<h2>Novo Post <a asp-action="Index" class="btn btn-sm btn-secondary">Back</a></h2>
+<div class="text-center">
+<h2>Novo Post </h2>
+<hr />
+    <img src="https://img.freepik.com/vetores-gratis/computador-e-monitor-de-animador-grafico-criando-videogame-modelando-movimento-processando-arquivo-de-video-usando-editor-profissional-ilustracao-vetorial-para-design-grafico-arte-conceito-de-designer-no-local-de-trabalho_74855-13038.jpg?" />
+</div>
 
 <form asp-action="NovoPost" method="post">  
     <div class="form-group">
@@ -16,8 +15,9 @@
         <label for="Conteudo">Conteúdo:</label>
         <input class="form-control" name="Conteudo" />
     </div>
+    <br />
     <div class="text-center panel-body">
-        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+        <button type="submit" class="btn btn-outline-primary">Salvar</button>
     </div>
 </form>
 
@@ -42,4 +42,8 @@
         </tbody>
     </table>
 }
+
+<div class="form-group">
+    <button class="btn btn-outline-primary">@Html.ActionLink("Voltar para o Feed", "Index", "Post")</button>
+</div>
 

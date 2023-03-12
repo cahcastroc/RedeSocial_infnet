@@ -53,6 +53,7 @@ namespace RedeSocial_infnet.API.Controllers
             return Ok(usuarioViewModel);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Cadastro")]
         public async Task<IActionResult> Cadastro([FromBody] UsuarioViewModel user)
@@ -89,6 +90,7 @@ namespace RedeSocial_infnet.API.Controllers
             return Ok(new { Message = "Registro realizado com sucesso" });
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
@@ -113,12 +115,12 @@ namespace RedeSocial_infnet.API.Controllers
             return Ok(token);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut]
         [Route("Editar/{userName}")]
-        public async Task<IActionResult> Editar(string userName,[FromBody] EdicaoUsuarioViewModel usuarioAtualizado)
+        public async Task<IActionResult> Editar(string userName, [FromBody] EdicaoUsuarioViewModel usuarioAtualizado)
         {
-            Console.WriteLine(" Entrou no put");
+
             if (usuarioAtualizado == null)
             {
                 return new BadRequestObjectResult(new { Message = "Falha ao editar o usuário." });
@@ -146,12 +148,10 @@ namespace RedeSocial_infnet.API.Controllers
 
             if (resultado.Succeeded)
             {
-                Console.WriteLine("Editou ok");
                 return Ok(new { Message = "Usuário editado com sucesso" });
             }
             else
             {
-                Console.WriteLine(" Não Editou");
                 return BadRequest(new { Message = "Falha ao editar o usuário." });
             }
         }
@@ -188,6 +188,7 @@ namespace RedeSocial_infnet.API.Controllers
                 Issuer = jwtBearerTokenConfig.Issuer
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
+
             return tokenHandler.WriteToken(token);
         }
 

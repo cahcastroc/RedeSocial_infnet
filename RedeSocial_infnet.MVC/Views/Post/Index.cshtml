@@ -4,10 +4,10 @@
 
 <h1 class="text-center">Feed de postagens</h1>
 <hr />
-
-<p>
-    <a asp-action="NovoPost">Create New</a>
-</p>
+<div class="text-center">
+@Html.ActionLink("Ir para o seu perfil", "Index", "Perfil", new { userName = ViewBag.userName})
+</div>
+<br />
 <table class="table">
     <thead class="text-center">
         <tr>

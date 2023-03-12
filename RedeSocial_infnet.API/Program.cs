@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using RedeSocial_infnet.Domain.Models;
 using RedeSocial_infnet.Service.Data;
 using RedeSocial_infnet.Service.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,27 +29,6 @@ var jwtSection = builder.Configuration.GetSection("JwtConfig");
 builder.Services.Configure<JwtConfig>(jwtSection);
 var jwtBearerTokenSettings = jwtSection.Get<JwtConfig>();  
 var key = Encoding.ASCII.GetBytes(jwtBearerTokenSettings.SecretKey);
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//    .AddJwtBearer(options =>
-//    {
-//        options.RequireHttpsMetadata = false;
-//        options.SaveToken = true;
-//        options.TokenValidationParameters = new TokenValidationParameters()
-//        {
-//            ValidateIssuer = true,
-//            ValidIssuer = jwtBearerTokenSettings.Issuer,
-//            ValidateAudience = true,
-//            ValidAudience = jwtBearerTokenSettings.Audience,
-//            ValidateIssuerSigningKey = true,
-//            IssuerSigningKey = new SymmetricSecurityKey(key),
-//            ValidateLifetime = true,
-//            ClockSkew = TimeSpan.Zero
-//        };
-//    });
 
 
 
@@ -81,7 +61,6 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
-
 
 
 
