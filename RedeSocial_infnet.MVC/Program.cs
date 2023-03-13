@@ -30,14 +30,11 @@ builder.Services.AddAuthentication(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     options.Cookie.SameSite = SameSiteMode.None;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-
-    //options.LogoutPath = "/Auth/Logout";
-    //options.AccessDeniedPath = "/Auth/AccessDenied";
 })
 .AddJwtBearer(options =>
 {
-    options.Authority = "https://localhost:7098/"; // URL da sua API
-    options.Audience = "RedeSocialInfnetProjetoDeBloco"; // identificador do público do token JWT
+    options.Authority = "https://localhost:7098/"; // URL da API
+    options.Audience = "RedeSocialInfnetProjetoDeBloco"; // identificador do token JWT
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -78,7 +75,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-//app.UseExceptionHandler("/Home/Error");
+//app.UseExceptionHandler("/Home/Error"); //Página genérica de erro - Exception handler
 
 
 

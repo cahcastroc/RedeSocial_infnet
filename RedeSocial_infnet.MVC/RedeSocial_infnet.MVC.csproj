@@ -16,8 +16,4 @@
     <ProjectReference Include="..\RedeSocial_infnet.Service\RedeSocial_infnet.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Home\Images\" />
-  </ItemGroup>
-
 </Project>

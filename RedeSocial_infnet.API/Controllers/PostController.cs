@@ -67,7 +67,7 @@ namespace RedeSocial_infnet.API.Controllers
         
        
         [HttpPost]
-        public async Task<ActionResult<PostViewModel>> PostPost(PostViewModel postViewModel)
+        public async Task<ActionResult<PostViewModel>> NovoPost(PostViewModel postViewModel)
         {
             postViewModel.UserName = User.Identity.Name;
 
@@ -84,12 +84,8 @@ namespace RedeSocial_infnet.API.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPost", new { id = post.Id }, postViewModel);
-        }
-                      
+        }                    
 
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
-        }
+      
     }
 }
