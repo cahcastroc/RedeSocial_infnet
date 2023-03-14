@@ -25,8 +25,8 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var jwtToken = Request.Cookies["jwt"];
-            var user = Request.Cookies["user"];
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
+            var user = HttpContext.Session.GetString("user");
 
             ViewBag.userName = user;
 
@@ -38,7 +38,7 @@ namespace RedeSocial_infnet.MVC.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
 
-                using (var response = await client.GetAsync("https://localhost:7098/api/post"))
+                using (var response = await client.GetAsync("https://localhost:5001/api/post"))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -60,7 +60,7 @@ namespace RedeSocial_infnet.MVC.Controllers
         public IActionResult NovoPost()
         {
 
-            var jwtToken = Request.Cookies["jwt"];
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
             if (jwtToken == null)
             {
                 return RedirectToAction("Erro401", "Home");
@@ -73,7 +73,7 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> NovoPost(PostViewModel postViewModel)
         {
-            var jwtToken = Request.Cookies["jwt"];
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
 
             using (var httpClient = new HttpClient())
             {
@@ -82,7 +82,7 @@ namespace RedeSocial_infnet.MVC.Controllers
                 StringContent content = new StringContent(JsonConvert.SerializeObject(postViewModel), Encoding.UTF8, "application/json");
 
 
-                using (var response = await httpClient.PostAsync("https://localhost:7098/api/Post", content))
+                using (var response = await httpClient.PostAsync("https://localhost:5001/api/Post", content))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -99,12 +99,12 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> PostsUsuario(string userName)
         {
-            var jwtToken = Request.Cookies["jwt"];
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
             using (var httpClient = new HttpClient())
             {
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Post/usuario/{userName}"))
+                using (var response = await httpClient.GetAsync($"https://localhost:5001/api/Post/usuario/{userName}"))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {

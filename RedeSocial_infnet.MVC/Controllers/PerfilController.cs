@@ -14,16 +14,16 @@ namespace RedeSocial_infnet.MVC.Controllers
         public async Task<ActionResult> Index(string userName)
         {
             var perfilViewModel = new PerfilViewModel();
-            var token = Request.Cookies["jwt"];
-            var user = Request.Cookies["user"];
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
+            var user = HttpContext.Session.GetString("user");
 
             ViewBag.userName = user;
 
             using (var httpClient = new HttpClient())
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
            
-                using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Auth/Perfil/{userName}"))
+                using (var response = await httpClient.GetAsync($"https://localhost:5001/api/Auth/Perfil/{userName}"))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -36,7 +36,7 @@ namespace RedeSocial_infnet.MVC.Controllers
                 }
 
                 // Obter postagens do usuário
-                using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Post/usuario/{userName}"))
+                using (var response = await httpClient.GetAsync($"https://localhost:5001/api/Post/usuario/{userName}"))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
