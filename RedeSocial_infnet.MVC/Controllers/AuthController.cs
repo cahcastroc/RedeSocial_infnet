@@ -13,16 +13,6 @@ namespace RedeSocial_infnet.MVC.Controllers
     public class AuthController : Controller
     {
 
-        private readonly IHttpClientFactory _clientFactory;      
-           
-        
-
-        public AuthController(IHttpClientFactory clientFactory)
-        {
-            _clientFactory = clientFactory;          
-        }
-
-
         [HttpGet]
         public ViewResult Login() => View();
     
@@ -37,10 +27,11 @@ namespace RedeSocial_infnet.MVC.Controllers
         public async Task<IActionResult> Cadastro(UsuarioViewModel model)
         {            
 
-            var httpClient = _clientFactory.CreateClient();
-            var response = await httpClient.PostAsJsonAsync("https://localhost:7098/api/Auth/Cadastro", model);
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsJsonAsync("https://localhost:5001/api/Auth/Cadastro", model);
             if (response.IsSuccessStatusCode)
-            {               
+            {
+               
                 return RedirectToAction("Login", "Auth");
             }
             else { 
@@ -56,28 +47,15 @@ namespace RedeSocial_infnet.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-             
-            var httpClient = _clientFactory.CreateClient();
-            var response = await httpClient.PostAsJsonAsync("https://localhost:7098/api/Auth/Login", model);
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsJsonAsync("https://localhost:5001/api/Auth/Login", model);
             if (response.IsSuccessStatusCode)
             {
                 var token = await response.Content.ReadAsStringAsync();
 
-           
-                Response.Cookies.Append("jwt", token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    SameSite = SameSiteMode.None,
-                    Secure = true,
-                    Expires = DateTimeOffset.Now.AddMinutes(10)
-                });
-                Response.Cookies.Append("user", model.UserName, new CookieOptions
-                {
-                    HttpOnly = true,
-                    SameSite = SameSiteMode.None,
-                    Secure = true,
-                    Expires = DateTimeOffset.Now.AddMinutes(10)
-                });
+                HttpContext.Session.SetString("JwtToken", token);
+                HttpContext.Session.SetString("user", model.UserName);              
 
                 return RedirectToAction("Index", "Post");
             }
@@ -92,10 +70,10 @@ namespace RedeSocial_infnet.MVC.Controllers
 
         public async Task<ActionResult> Editar(string userName)
         {
-          
-            var token = Request.Cookies["jwt"];
-            var user = Request.Cookies["user"];
-           
+
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
+            var user = HttpContext.Session.GetString("user");
+
 
             if (userName != user)
             {
@@ -107,9 +85,9 @@ namespace RedeSocial_infnet.MVC.Controllers
             {
                 UsuarioViewModel usuario = new UsuarioViewModel();
                
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
-                using (var response = await httpClient.GetAsync($"https://localhost:7098/api/Auth/Perfil/{userName}"))
+                using (var response = await httpClient.GetAsync($"https://localhost:5001/api/Auth/Perfil/{userName}"))
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -141,11 +119,12 @@ namespace RedeSocial_infnet.MVC.Controllers
                       
             using (var client = new HttpClient())
             {
-                var token = Request.Cookies["jwt"];
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var jwtToken = HttpContext.Session.GetString("JwtToken");
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
                 StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-                using (var resposta = await client.PutAsync($"https://localhost:7098/api/auth/editar/{model.userName}", content))
+                using (var resposta = await client.PutAsync($"https://localhost:5001/api/auth/editar/{model.userName}", content))
                 {
                     if (resposta.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -162,8 +141,9 @@ namespace RedeSocial_infnet.MVC.Controllers
         }
 
         public IActionResult Logout (){ 
-            Response.Cookies.Delete("jwt");
-            Response.Cookies.Delete("user");
+            HttpContext.Session.Remove("JwtToken");
+            HttpContext.Session.Remove("user");
+            HttpContext.Session.Clear();            
             return RedirectToAction("Index", "Home");
 
         }
