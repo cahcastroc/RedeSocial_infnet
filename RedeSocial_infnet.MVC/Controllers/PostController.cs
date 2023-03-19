@@ -13,7 +13,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
-
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace RedeSocial_infnet.MVC.Controllers
 {
@@ -69,10 +71,23 @@ namespace RedeSocial_infnet.MVC.Controllers
             return View();
         }
 
+        public static async Task<byte[]> FormFileToByteArrayAsync(IFormFile formFile)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
 
         [HttpPost]
-        public async Task<IActionResult> NovoPost(PostViewModel postViewModel)
+        public async Task<IActionResult> NovoPost(string titulo, string conteudo, IFormFile imagem)
         {
+            PostViewModel postViewModel = new();
+            postViewModel.Titulo = titulo;
+            postViewModel.Conteudo = conteudo;
+            byte[] blobBytes = await FormFileToByteArrayAsync(imagem);
+
             var jwtToken = HttpContext.Session.GetString("JwtToken");
 
             using (var httpClient = new HttpClient())

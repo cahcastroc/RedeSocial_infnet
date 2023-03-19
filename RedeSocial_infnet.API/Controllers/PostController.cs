@@ -67,8 +67,9 @@ namespace RedeSocial_infnet.API.Controllers
         
        
         [HttpPost]
-        public async Task<ActionResult<PostViewModel>> NovoPost(PostViewModel postViewModel)
+        public async Task<ActionResult<PostViewModel>> NovoPost([FromForm] PostViewModel postViewModel, IFormFile Imagem)
         {
+            Console.WriteLine("Endpoint NovoPost was called!");
             postViewModel.UserName = User.Identity.Name;
 
             Post post = new Post();
@@ -78,8 +79,15 @@ namespace RedeSocial_infnet.API.Controllers
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;
 
-          
-        
+            if (postViewModel.Imagem != null && postViewModel.Imagem.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await postViewModel.Imagem.CopyToAsync(memoryStream);
+                    var magem = memoryStream.ToArray();
+                }
+            }
+
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
