@@ -6,14 +6,18 @@
     <img src="https://img.freepik.com/vetores-gratis/computador-e-monitor-de-animador-grafico-criando-videogame-modelando-movimento-processando-arquivo-de-video-usando-editor-profissional-ilustracao-vetorial-para-design-grafico-arte-conceito-de-designer-no-local-de-trabalho_74855-13038.jpg?" />
 </div>
 
-<form asp-action="NovoPost" method="post">  
+<form asp-action="NovoPost" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="Titulo">Título:</label>
         <input class="form-control" name="Titulo" />
     </div>
     <div class="form-group">
         <label for="Conteudo">Conteúdo:</label>
-        <input class="form-control" name="Conteudo" />
+        <textarea class="form-control" name="Conteudo"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="Imagem">Imagem:</label>
+        <input type="file" class="form-control-file" name="Imagem" />
     </div>
     <br />
     <div class="text-center panel-body">
@@ -27,17 +31,21 @@
     <table class="table table-sm table-striped table-bordered m-2">
         <thead>
             <tr>
-               
                 <th>Título</th>
                 <th>Conteúdo</th>
-                
+                <th>Imagem</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-          
                 <td>@Model.Titulo</td>
-                <td>@Model.Conteudo</td>              
+                <td>@Model.Conteudo</td>
+                <td>
+                    @if (Model.Imagem != null)
+                    {
+                        <img src="data:image;base64,@(Convert.ToBase64String(Model.Imagem))" style="max-width: 100px; max-height: 100px;" />
+                    }
+                </td >
             </tr>
         </tbody>
     </table>

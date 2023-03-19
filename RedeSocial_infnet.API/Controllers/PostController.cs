@@ -63,9 +63,8 @@ namespace RedeSocial_infnet.API.Controllers
                 postViewModel.CriadoEm = post.CriadoEm;
                 return postViewModel;           
         }
-              
-        
-       
+
+
         [HttpPost]
         public async Task<ActionResult<PostViewModel>> NovoPost(PostViewModel postViewModel)
         {
@@ -73,19 +72,17 @@ namespace RedeSocial_infnet.API.Controllers
 
             Post post = new Post();
 
-            post.UserName = postViewModel.UserName;          
+            post.UserName = postViewModel.UserName;
             post.CriadoEm = DateTime.Now;
             post.Titulo = postViewModel.Titulo;
             post.Conteudo = postViewModel.Conteudo;
+            post.Imagem = postViewModel.Imagem;
 
-          
-        
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPost", new { id = post.Id }, postViewModel);
-        }                    
+        }
 
-      
     }
 }

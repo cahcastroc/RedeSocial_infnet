@@ -22,6 +22,9 @@
             <th>
                 Postado em:
             </th>
+            <th>
+                Imagem:
+            </th>
         </tr>
     </thead>
     <tbody class="text-center">
@@ -41,7 +44,12 @@
                     @Html.DisplayFor(modelItem => item.CriadoEm)
                 </td>
                 <td>
-                </td>
+                    @if (item.Imagem != null)
+                    {
+                        <img src="data:image;base64,@(Convert.ToBase64String(item.Imagem))" style="max-width: 100px; max-height: 100px;" />
+                    }
+
+                <td>
             </tr>
         }
     </tbody>
