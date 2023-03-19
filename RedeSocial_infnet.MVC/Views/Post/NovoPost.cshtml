@@ -40,6 +40,12 @@
             <tr>
                 <td>@Model.Titulo</td>
                 <td>@Model.Conteudo</td>
+                <td>
+                    @if (Model.Imagem != null)
+                    {
+                        <img src="data:image;base64,@(Convert.ToBase64String(Model.Imagem))" />
+                    }
+                </td>
             </tr>
         </tbody>
     </table>
