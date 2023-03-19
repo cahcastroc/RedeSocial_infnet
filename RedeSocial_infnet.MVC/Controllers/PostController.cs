@@ -87,6 +87,7 @@ namespace RedeSocial_infnet.MVC.Controllers
             postViewModel.Titulo = titulo;
             postViewModel.Conteudo = conteudo;
             byte[] blobBytes = await FormFileToByteArrayAsync(imagem);
+            postViewModel.Imagem = blobBytes;
 
             var jwtToken = HttpContext.Session.GetString("JwtToken");
 

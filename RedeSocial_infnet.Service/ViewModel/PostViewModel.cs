@@ -17,7 +17,7 @@ namespace RedeSocial_infnet.Service.ViewModel
         public string UserName { get; set; }
         public DateTime CriadoEm { get; set; }
         public DateTime EditadoEm { get; set; }
-        public IFormFile Imagem { get; set; }
+        public byte[] Imagem { get; set; }
 
     }
 }

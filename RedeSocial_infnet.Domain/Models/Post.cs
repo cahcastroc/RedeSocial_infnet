@@ -14,6 +14,7 @@ namespace RedeSocial_infnet.Domain.Models
         public DateTime CriadoEm { get; set; }
         public DateTime EditadoEm { get; set; }
         public string UserName { get; set;}       
+        public byte[] Imagem { get; set; }
    
     }
 }
