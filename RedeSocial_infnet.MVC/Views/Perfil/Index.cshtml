@@ -19,6 +19,7 @@
                 <td><strong>Área desejada no TI:</strong></td>
                 <td>@Model.Usuario.AreaMigracao</td>
             </tr>
+
         </tbody>
     </table>
     
@@ -55,7 +56,9 @@
             <th>
                 Usuário
             </th>
-
+            <th>
+                Imagem:
+            </th>
             <th>
                 Postado em:
             </th>
@@ -74,6 +77,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
+                <td>
+                    @if (item.Imagem != null)
+                    {
+                        <img src="data:image;base64,@(Convert.ToBase64String(item.Imagem))" style="max-width: 100px; max-height: 100px;" />
+                    }
+                </td>               
                 <td>
                     @Html.DisplayFor(modelItem => item.CriadoEm)
                 </td>

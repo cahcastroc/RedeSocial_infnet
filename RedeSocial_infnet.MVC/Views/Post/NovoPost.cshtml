@@ -9,15 +9,15 @@
 <form asp-action="NovoPost" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="Titulo">Título:</label>
-        <input class="form-control" name="Titulo" />
+        <input class="form-control" name="Titulo" required />
     </div>
     <div class="form-group">
         <label for="Conteudo">Conteúdo:</label>
-        <textarea class="form-control" name="Conteudo"></textarea>
+        <textarea class="form-control" name="Conteudo" required></textarea>
     </div>
     <div class="form-group">
         <label for="Imagem">Imagem:</label>
-        <input type="file" class="form-control-file" name="Imagem" />
+        <input type="file" class="form-control-file" name="Imagem" required />
     </div>
     <br />
     <div class="text-center panel-body">
