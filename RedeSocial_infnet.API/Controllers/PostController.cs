@@ -64,6 +64,21 @@ namespace RedeSocial_infnet.API.Controllers
                 return postViewModel;           
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ExcluirPost(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            _context.Posts.Remove(post);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         [HttpPost]
         public async Task<ActionResult<PostViewModel>> NovoPost(PostViewModel postViewModel)

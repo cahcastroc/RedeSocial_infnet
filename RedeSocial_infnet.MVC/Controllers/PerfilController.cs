@@ -13,7 +13,7 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string userName)
         {
-            var perfilViewModel = new PerfilViewModel();
+            var perfilViewModel = new PerfilViewModel(HttpContext);
             var jwtToken = HttpContext.Session.GetString("JwtToken");
             var user = HttpContext.Session.GetString("user");
 

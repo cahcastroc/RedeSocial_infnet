@@ -11,7 +11,8 @@ namespace RedeSocial_infnet.Service.ViewModel
 {
     public class PostViewModel
     {
-     
+        public int Id { get; set; }
+
         public string Titulo { get; set; }
         public string Conteudo { get; set; }
         public string UserName { get; set; }
