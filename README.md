@@ -35,6 +35,7 @@ Aqui estão alguns exemplos de como usar os endpoints mencionados acima.
 
 #### Cadastro
 
+```http
 POST /api/Auth/Cadastro
 Content-Type: application/json
 
@@ -46,6 +47,7 @@ Content-Type: application/json
 "AreaMigracao": "Desenvolvedor Full-Stack",
 "FotoPerfilByte": null
 }
+```
 
 
 #### Login
