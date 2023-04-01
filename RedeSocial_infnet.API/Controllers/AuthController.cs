@@ -57,6 +57,7 @@ namespace RedeSocial_infnet.API.Controllers
                 Email = usuario.Email,
                 Localidade = usuario.Localidade,
                 AreaMigracao = usuario.AreaMigracao,
+                FotoPerfilByte = usuario.FotoPerfil
             };
 
             return Ok(usuarioViewModel);
