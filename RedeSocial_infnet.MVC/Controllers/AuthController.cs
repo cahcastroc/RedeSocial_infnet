@@ -12,6 +12,14 @@ namespace RedeSocial_infnet.MVC.Controllers
 {
     public class AuthController : Controller
     {
+        private static async Task<byte[]> FormFileToByteArrayAsync(IFormFile formFile)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
 
         [HttpGet]
         public ViewResult Login() => View();
@@ -25,19 +33,21 @@ namespace RedeSocial_infnet.MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cadastro(UsuarioViewModel model)
-        {            
+        {
 
             var httpClient = new HttpClient();
+            model.FotoPerfilByte = await FormFileToByteArrayAsync(model.FotoPerfil);
             var response = await httpClient.PostAsJsonAsync("https://localhost:5001/api/Auth/Cadastro", model);
             if (response.IsSuccessStatusCode)
             {
-               
+
                 return RedirectToAction("Login", "Auth");
             }
-            else { 
+            else
+            {
                 ModelState.AddModelError("", "Erro ao realizar o cadastro. Verifique os dados inseridos e tente novamente");
                 return View(model);
-            
+
             }
         }
 

@@ -18,6 +18,7 @@ namespace RedeSocial_infnet.Domain.Models
         public string AreaMigracao { get; set; }
         public DateTime CriadoEm { get; set; }
         public DateTime EditadoEm { get; set; }
+        public byte[] FotoPerfil { get; set; }
 
 
     }
