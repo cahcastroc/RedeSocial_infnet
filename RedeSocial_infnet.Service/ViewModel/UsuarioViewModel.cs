@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RedeSocial_infnet.Service.ViewModel
@@ -17,6 +19,9 @@ namespace RedeSocial_infnet.Service.ViewModel
         [Required (ErrorMessage ="Preenchimento do e-mail é obrigatório")]
         public string Email { get; set; }       
         public string Localidade { get; set; }
-        public string AreaMigracao { get; set; }      
+        public string AreaMigracao { get; set; }
+        [JsonIgnore]
+        public IFormFile FotoPerfil { get; set; }
+        public byte[] FotoPerfilByte { get; set; }
     }
 }

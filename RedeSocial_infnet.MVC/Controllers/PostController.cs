@@ -140,6 +140,27 @@ namespace RedeSocial_infnet.MVC.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ExcluirPost(int id)
+        {
+            var jwtToken = HttpContext.Session.GetString("JwtToken");
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+                using (var response = await httpClient.DeleteAsync($"https://localhost:5001/api/Post/{id}"))
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Erro401", "Home");
+                    }
+
+                    return RedirectToAction("Index", "PostsUsuario");
+                }
+            }
+        }
+
     }
 
 

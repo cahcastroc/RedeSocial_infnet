@@ -30,6 +30,15 @@ namespace RedeSocial_infnet.API.Controllers
             this.signInManager = signInManager;
         }
 
+        private static async Task<byte[]> FormFileToByteArrayAsync(IFormFile formFile)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
+
         [Authorize]
         [HttpGet("perfil/{userName}")]
         public async Task<ActionResult<UsuarioViewModel>> Perfil(string userName)
@@ -48,6 +57,7 @@ namespace RedeSocial_infnet.API.Controllers
                 Email = usuario.Email,
                 Localidade = usuario.Localidade,
                 AreaMigracao = usuario.AreaMigracao,
+                FotoPerfilByte = usuario.FotoPerfil
             };
 
             return Ok(usuarioViewModel);
@@ -70,7 +80,8 @@ namespace RedeSocial_infnet.API.Controllers
                 Password = user.Password,
                 Localidade = user.Localidade,
                 AreaMigracao = user.AreaMigracao,
-                CriadoEm = DateTime.Now
+                CriadoEm = DateTime.Now,
+                FotoPerfil = user.FotoPerfilByte
             };
 
             IdentityUser identityUser = new IdentityUser() { UserName = usuario.UserName, Email = usuario.Email };
