@@ -144,6 +144,7 @@ namespace RedeSocial_infnet.MVC.Controllers
         public async Task<IActionResult> ExcluirPost(int id)
         {
             var jwtToken = HttpContext.Session.GetString("JwtToken");
+            var user = HttpContext.Session.GetString("user");
 
             using (var httpClient = new HttpClient())
             {
@@ -156,7 +157,7 @@ namespace RedeSocial_infnet.MVC.Controllers
                         return RedirectToAction("Erro401", "Home");
                     }
 
-                    return RedirectToAction("Index", "PostsUsuario");
+                    return RedirectToAction("Index", "Perfil", new { userName = user });
                 }
             }
         }
